@@ -1558,3 +1558,265 @@ img {
         border-radius: var(--border-radius);
     }
 }
+
+// Preloader
+window.addEventListener('load', function() {
+    const preloader = document.querySelector('.preloader');
+    setTimeout(() => {
+        preloader.style.opacity = '0';
+        setTimeout(() => {
+            preloader.style.display = 'none';
+        }, 500);
+    }, 1000);
+});
+
+// Navigation
+const navbar = document.querySelector('.navbar');
+const hamburger = document.querySelector('.hamburger');
+const navLinks = document.querySelector('.nav-links');
+
+window.addEventListener('scroll', function() {
+    if (window.scrollY > 100) {
+        navbar.classList.add('scrolled');
+    } else {
+        navbar.classList.remove('scrolled');
+    }
+});
+
+hamburger.addEventListener('click', function() {
+    hamburger.classList.toggle('active');
+    navLinks.classList.toggle('active');
+});
+
+// Close mobile menu when clicking a link
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+    });
+});
+
+// Hero Slider
+const slides = document.querySelectorAll('.slide');
+const slideDots = document.querySelector('.slide-dots');
+const prevBtn = document.querySelector('.slide-prev');
+const nextBtn = document.querySelector('.slide-next');
+let currentSlide = 0;
+
+// Create dots
+slides.forEach((slide, index) => {
+    const dot = document.createElement('div');
+    dot.classList.add('slide-dot');
+    if (index === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => goToSlide(index));
+    slideDots.appendChild(dot);
+});
+
+const dots = document.querySelectorAll('.slide-dot');
+
+function goToSlide(n) {
+    slides[currentSlide].classList.remove('active');
+    dots[currentSlide].classList.remove('active');
+    currentSlide = (n + slides.length) % slides.length;
+    slides[currentSlide].classList.add('active');
+    dots[currentSlide].classList.add('active');
+}
+
+function nextSlide() {
+    goToSlide(currentSlide + 1);
+}
+
+function prevSlide() {
+    goToSlide(currentSlide - 1);
+}
+
+nextBtn.addEventListener('click', nextSlide);
+prevBtn.addEventListener('click', prevSlide);
+
+// Auto slide change
+let slideInterval = setInterval(nextSlide, 5000);
+
+// Pause on hover
+const heroSlider = document.querySelector('.hero-slider');
+heroSlider.addEventListener('mouseenter', () => clearInterval(slideInterval));
+heroSlider.addEventListener('mouseleave', () => slideInterval = setInterval(nextSlide, 5000));
+
+// Dining Tabs
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabPanes = document.querySelectorAll('.tab-pane');
+
+tabBtns.forEach((btn, index) => {
+    btn.addEventListener('click', () => {
+        // Remove active class from all buttons and panes
+        tabBtns.forEach(btn => btn.classList.remove('active'));
+        tabPanes.forEach(pane => pane.classList.remove('active'));
+        
+        // Add active class to clicked button and corresponding pane
+        btn.classList.add('active');
+        tabPanes[index].classList.add('active');
+    });
+});
+
+// Testimonials Slider
+const testimonials = document.querySelectorAll('.testimonial');
+const testimonialDots = document.querySelector('.testimonial-dots');
+const testimonialPrev = document.querySelector('.testimonial-prev');
+const testimonialNext = document.querySelector('.testimonial-next');
+let currentTestimonial = 0;
+
+// Create dots
+testimonials.forEach((testimonial, index) => {
+    const dot = document.createElement('div');
+    dot.classList.add('testimonial-dot');
+    if (index === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => goToTestimonial(index));
+    testimonialDots.appendChild(dot);
+});
+
+const testimonialDotsAll = document.querySelectorAll('.testimonial-dot');
+
+function goToTestimonial(n) {
+    testimonials[currentTestimonial].classList.remove('active');
+    testimonialDotsAll[currentTestimonial].classList.remove('active');
+    currentTestimonial = (n + testimonials.length) % testimonials.length;
+    testimonials[currentTestimonial].classList.add('active');
+    testimonialDotsAll[currentTestimonial].classList.add('active');
+}
+
+testimonialNext.addEventListener('click', () => goToTestimonial(currentTestimonial + 1));
+testimonialPrev.addEventListener('click', () => goToTestimonial(currentTestimonial - 1));
+
+// Auto testimonial change
+setInterval(() => goToTestimonial(currentTestimonial + 1), 8000);
+
+// Modal
+const loginBtn = document.getElementById('loginBtn');
+const loginModal = document.getElementById('loginModal');
+const registerModal = document.getElementById('registerModal');
+const showRegister = document.getElementById('showRegister');
+const showLogin = document.getElementById('showLogin');
+const closeModals = document.querySelectorAll('.close-modal');
+
+loginBtn.addEventListener('click', () => {
+    loginModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+});
+
+showRegister.addEventListener('click', (e) => {
+    e.preventDefault();
+    loginModal.classList.remove('active');
+    registerModal.classList.add('active');
+});
+
+showLogin.addEventListener('click', (e) => {
+    e.preventDefault();
+    registerModal.classList.remove('active');
+    loginModal.classList.add('active');
+});
+
+closeModals.forEach(btn => {
+    btn.addEventListener('click', () => {
+        loginModal.classList.remove('active');
+        registerModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    });
+});
+
+// Close modal when clicking outside
+window.addEventListener('click', (e) => {
+    if (e.target === loginModal) {
+        loginModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+    if (e.target === registerModal) {
+        registerModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+});
+
+// Dashboard
+const dashboardOverlay = document.getElementById('dashboardOverlay');
+const closeDashboard = document.querySelector('.btn-close-dashboard');
+const dashboardNavItems = document.querySelectorAll('.nav-item');
+const dashboardContents = document.querySelectorAll('.dashboard-content');
+const bookingTabs = document.querySelectorAll('.bookings-tabs .tab-btn');
+
+// Show dashboard when logged in (for demo purposes)
+loginModal.querySelector('form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    loginModal.classList.remove('active');
+    dashboardOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+});
+
+// Close dashboard
+closeDashboard.addEventListener('click', () => {
+    dashboardOverlay.classList.remove('active');
+    document.body.style.overflow = 'auto';
+});
+
+// Dashboard navigation
+dashboardNavItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const contentId = item.getAttribute('data-content');
+        
+        dashboardNavItems.forEach(navItem => navItem.classList.remove('active'));
+        dashboardContents.forEach(content => content.classList.remove('active'));
+        
+        item.classList.add('active');
+        document.getElementById(contentId + 'Content').classList.add('active');
+    });
+});
+
+// Booking tabs
+bookingTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        bookingTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        // Here you would load the appropriate content for the tab
+    });
+});
+
+// Smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+            window.scrollTo({
+                top: targetElement.offsetTop - 80,
+                behavior: 'smooth'
+            });
+        }
+    });
+});
+
+// Animation on scroll
+function animateOnScroll() {
+    const elements = document.querySelectorAll('.about-content, .about-images, .room-card, .feature, .event-card, .gallery-item');
+    
+    elements.forEach(element => {
+        const elementPosition = element.getBoundingClientRect().top;
+        const screenPosition = window.innerHeight / 1.2;
+        
+        if (elementPosition < screenPosition) {
+            element.style.opacity = '1';
+            element.style.transform = 'translateY(0)';
+        }
+    });
+}
+
+// Set initial state for animated elements
+document.querySelectorAll('.about-content, .about-images, .room-card, .feature, .event-card, .gallery-item').forEach(element => {
+    element.style.opacity = '0';
+    element.style.transform = 'translateY(30px)';
+    element.style.transition = 'all 0.6s ease';
+});
+
+window.addEventListener('scroll', animateOnScroll);
+window.addEventListener('load', animateOnScroll);
